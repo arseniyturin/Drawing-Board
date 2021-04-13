@@ -172,8 +172,11 @@
 	const parse = (e) => { return JSON.parse(e) };
 
 	function keepAlive(WS, interval=30000) {
-		window.setInterval((e) => {WS.send(stringify({'ka':1}));}, interval);
-		console.log('sending keep alive');
+		window.setInterval((e) => {
+			WS.send( stringify({'ka':1}) ); 
+			console.log('sending keep alive');
+		}, interval);
+
 	}
 
 	function createSocket() {
