@@ -32,19 +32,21 @@ function handlingClients(ws) {
 
           case 'init':
             ws.userid = data['userid'];
-            USERS[data['userid']] = {'username': data['username'], 'color': data['color']};
+            USERS[data['userid']] = {'username': data['username'], 'color': data['color'], 'width': data['width']};
             console.log(`User ${USERS[data['userid']]['username']} connected`);
             wss.clients.forEach((client) => { client.send(stringify({'action': 'loadUsers', 'users': USERS})); });
             break;
 
           case 'changeColor':
             USERS[data['userid']]['color'] = data['color'];
+            USERS[data['userid']]['width'] = data['width'];
             wss.clients.forEach((client) => {
               client.send(stringify(
                 {
                   'action': 'changeColor',
                   'userid': data['userid'],
-                  'color': data['color']
+                  'color': data['color'],
+                  'width': data['width']
                 }
               ));
               }

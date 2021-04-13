@@ -22,24 +22,43 @@
 			left: 14px;
 			z-index: 0;
 		}
-		#eraser {
+
+		#saveImage {
+		display: block;
+		position: absolute;
+		top: 14px;
+		right: 14px;
+		cursor: pointer;
+		text-align: center;
+		z-index: 100;
+		border: 1px #e0e0e0 solid;
+		padding: 10px 20px;
+		font-size: 13px;
+		border-radius: 4px;
+		user-select: none;
+}
+#eraser {
       border: 1px #e0e0e0 solid;
       position: absolute;
       top: 14px;
-      left: 50%;
-      margin-left: -60px;
+      right: 0;
+      margin-right: 100px;
       display: block;
-      z-index: 0;
+      z-index: 100;
       text-align: center;
-      color: #e0e0e0;
+      /*color: #e0e0e0;*/
       padding: 10px 20px;
       cursor: pointer;
       border-radius: 4px;
       user-select: none;
+	font-size: 13px;
 		}
 		.eraser_active {
 		  background-color: #5aa2e1;
+		color: #fff;
 		}
+
+
 		.user {
 			padding: 4px;
 		}
@@ -108,6 +127,13 @@
   </style>
   </head>
   <body>
+
+		<div id="users"></div>
+		<div id="eraser">ERASE</div>
+		<div id="saveImage">SAVE</div>
+		<div id="blank"></div>
+		<input type="text" id="changeUsername_field" />
+
 		<div id="colorPicker">
 			<div class="color" onclick="changeColor('#f44336');" style="background-color: #f44336"></div>
 			<div class="color" onclick="changeColor('#e91e63');" style="background-color: #e91e63"></div>
@@ -137,7 +163,10 @@
 	let USERS = {}
 	let USERNAME;
 	let USERID;
+	let COLOR = '#000000';
 	let coord = {'x': 0, 'y': 0}
+	let eraserState = 0;
+	const eraser = document.getElementById('eraser');
 
 	const stringify = (e) => { return JSON.stringify(e) };
 	const parse = (e) => { return JSON.parse(e) };
@@ -175,14 +204,14 @@
 
 		}
 
-		USERS[USERID] = [USERNAME, '#000000', 0, 0];
 		WS.send(
 			JSON.stringify(
 			{
 				'action': 'init',
 				'userid': USERID,
 				'username': USERNAME,
-				'color': '#000000'
+				'color': COLOR,
+				'width': 5
 			}
 		)
 	);
@@ -219,6 +248,7 @@
 
 				case 'changeColor':
 					USERS[data['userid']]['color'] = data['color'];
+					USERS[data['userid']]['width'] = data['width'];
 					break;
 
 				case 'deleteUser':
@@ -255,12 +285,16 @@
 
 	const [CANVAS, CONTEXT] = initCanvas();
 
+	CONTEXT.rect(0, 0, CANVAS.offsetWidth, CANVAS.offsetHeight);
+	CONTEXT.fillStyle = "#ffffff";
+	CONTEXT.fill();
+
 
 	canvas.addEventListener('touchstart', touchstart);
 	canvas.addEventListener('touchmove', draw);
 	canvas.addEventListener('mousedown', mousedown);
 	canvas.addEventListener('mouseup', mouseup);
-	//eraser.addEventListener('click', changeEraserState);
+	eraser.addEventListener('click', changeEraserState);
 
 
 
@@ -304,6 +338,7 @@
 	function drawUsers(array) {
 	  CONTEXT.beginPath();
 		CONTEXT.strokeStyle = USERS[array[4]]['color'];
+		CONTEXT.lineWidth = USERS[array[4]]['width'];
 	  CONTEXT.moveTo(array[0], array[1]);
 		CONTEXT.lineTo(array[2], array[3]);
 		CONTEXT.stroke();
@@ -311,8 +346,29 @@
 
 	function changeColor(color) {
 		CONTEXT.strokeStyle = color;
-		WS.send(stringify({'action': 'changeColor', 'userid': USERID, 'color': color}));
+		COLOR = color;
+		WS.send(stringify({'action': 'changeColor', 'userid': USERID, 'color': COLOR, 'width': 5}));
+		if (eraserState == 1) changeEraserState();
 	}
+
+	function changeEraserState() {
+  if (eraserState==0) {
+    eraser.classList.add('eraser_active');
+		WS.send(stringify({'action': 'changeColor', 'userid': USERID, 'color': '#ffffff', 'width': 25}));
+    eraserState = 1;
+  }
+  else {
+    eraser.classList.remove('eraser_active');
+		WS.send(stringify({'action': 'changeColor', 'userid': USERID, 'color': COLOR, 'width': 5}));
+    eraserState = 0;
+  }
+}
+
+// Save Image
+saveImage.onclick = () => {
+	const image64 = canvas.toDataURL('image/png', 1.0);
+	window.location.href = image64.replace("image/png", "image/octet-stream");
+}
 
 		const random = (...args) => {
 			if (args[1]) return Math.round(args[0] + Math.random() * (args[1] - args[0]));
