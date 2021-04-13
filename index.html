@@ -90,44 +90,57 @@
 		  width: 100%;
 		  height: 100%;
 		}
+		#colorPicker {
+			position: absolute;
+			top: 10px;
+			left: 10px;
+			padding: 10px;
+			border: 1px #f6f6f6 solid;
+			z-index: 100;
+		}
+		.color{
+			width: 20px;
+			height: 20px;
+			border-radius: 10px;
+			margin: 5px;
+			cursor: pointer;
+		}
   </style>
   </head>
   <body>
+		<div id="colorPicker">
+			<div class="color" onclick="changeColor('#f44336');" style="background-color: #f44336"></div>
+			<div class="color" onclick="changeColor('#e91e63');" style="background-color: #e91e63"></div>
+			<div class="color" onclick="changeColor('#9c27b0');" style="background-color: #9c27b0"></div>
+			<div class="color" onclick="changeColor('#673ab7');" style="background-color: #673ab7"></div>
+			<div class="color" onclick="changeColor('#3f51b5');" style="background-color: #3f51b5"></div>
+			<div class="color" onclick="changeColor('#2196f3');" style="background-color: #2196f3"></div>
+			<div class="color" onclick="changeColor('#03a9f4');" style="background-color: #03a9f4"></div>
+			<div class="color" onclick="changeColor('#00bcd4');" style="background-color: #00bcd4"></div>
+			<div class="color" onclick="changeColor('#009688');" style="background-color: #009688"></div>
+			<div class="color" onclick="changeColor('#4caf50');" style="background-color: #4caf50"></div>
+			<div class="color" onclick="changeColor('#8bc34a');" style="background-color: #8bc34a"></div>
+			<div class="color" onclick="changeColor('#cddc39');" style="background-color: #cddc39"></div>
+			<div class="color" onclick="changeColor('#ffeb3b');" style="background-color: #ffeb3b"></div>
+			<div class="color" onclick="changeColor('#ffc107');" style="background-color: #ffc107"></div>
+			<div class="color" onclick="changeColor('#ff9800');" style="background-color: #ff9800"></div>
+			<div class="color" onclick="changeColor('#ff5722');" style="background-color: #ff5722"></div>
+			<div class="color" onclick="changeColor('#9e9e9e');" style="background-color: #9e9e9e"></div>
+			<div class="color" onclick="changeColor('#795548');" style="background-color: #795548"></div>
+		</div>
 		<canvas id="canvas"></canvas>
   </body>
 	<script type="text/javascript">
 
-/*
-
-		actions:
-		0 - join
-		1 - change username
-		2 - change color
-		3 - draw
-		4 - quit
-
-		data transfer:
-		- join
-			UTF-8 (action, userid, userid, color, coords(4))
-		- change name
-			UTF-8 (action, userid, username)
-		- change color
-			UTF-8 (action, userid, color)
-		- draw
-			Uint16Array (action, userid, coords(4)) - 12 bytes
-		- quit
-			Uint16Array (action, userid) - 4 bytes
-
-			data stored:
-		- client
-			usernames, userids, colors, coords(4)
-		- server
-			usernames, userids, colors, coords(4)
-
-			Each action broadcasts data to all users
-
-	*/
 	const ADDRESS = location.origin.replace(/^http/, 'ws');
+	const WS = createSocket();
+	let USERS = {}
+	let USERNAME;
+	let USERID;
+	let coord = {'x': 0, 'y': 0}
+
+	const stringify = (e) => { return JSON.stringify(e) };
+	const parse = (e) => { return JSON.parse(e) };
 
 	function keepAlive(WS, interval=30000) {
 		window.setInterval((e) => {WS.send('');}, interval);
@@ -139,21 +152,95 @@
 		return WS;
 	}
 
-	let WS = createSocket();
-	keepAlive(WS);
+	//keepAlive(WS);
+
+	function createUser() {
+
+		// 1. Generate USERID
+		USERID = parseInt(String(Date.now()).substr(9));
+		// 2. Generate USERNAME or get it from Cookies
+		const usernames = ['James','Mary','John','Patricia','Robert','Jennifer','Michael','Linda','William',
+                    'Elizabeth','David','Barbara','Richard','Susan','Joseph','Jessica','Thomas','Sarah',
+                    'Charles','Karen','Daniel','Lisa','Mark','Emily','Andrew','Donna','Kevin','Carol',
+                    'Joshua','Melissa','Timothy','Amy','Gary','Angela','Larry','Nicole','Frank','Ruth'];
+
+		if (getCookie()['drawing'] != undefined) {
+
+			USERNAME = decodeURIComponent(getCookie()['drawing']);
+			document.title = USERNAME;
+
+		} else {
+
+			USERNAME = usernames[random(usernames.length-1)];
+			document.title = USERNAME;
+
+		}
+
+		USERS[USERID] = [USERNAME, '#000000', 0, 0];
+		WS.send(
+			JSON.stringify(
+			{
+				'action': 'init',
+				'userid': USERID,
+				'username': USERNAME,
+				'color': '#000000'
+			}
+		)
+	);
+
+
+	}
 
 	// Client connected to server
-	WS.onopen = () => { console.log('Connected to Server at:', WS.url) }
+	WS.onopen = () => {
+		console.log('Connected to Server at:', WS.url);
+		createUser();
+	}
 	// Server closed the connection or it's crashed
 	WS.onclose = () => {
 		console.log('Connection is closed');
 	}
 	// Receive message from server
-	WS.onmessage = (event) => {
-		if (event.data instanceof ArrayBuffer) {
-			let arr = new Uint16Array(event.data);
+	WS.onmessage = (message) => {
+
+		if (message.data instanceof ArrayBuffer) {
+
+			let arr = new Uint16Array(message.data);
 			drawOthers(arr);
+
+		} else {
+
+			let data = parse(message.data);
+
+			switch (data['action']) {
+
+				case 'changeUsername':
+					console.log('Changing username');
+					break;
+
+				case 'changeColor':
+					USERS[data['userid']]['color'] = data['color'];
+					break;
+
+				case 'deleteUser':
+					delete USERS[data['userid']];
+					break;
+
+				case 'loadUsers':
+					USERS = data['users'];
+					break;
+			}
 		}
+	}
+
+	function setCookie(username) {
+  	let later = new Date().getTime() * 2;
+  	document.cookie = 'circles='+encodeURIComponent(username)+';expires=' +(new Date(later)).toUTCString();
+  	console.log('Set Cookie for '+username);
+	}
+
+	function getCookie() {
+  	return Object.fromEntries(document.cookie.split(';').map((e)=>e.trim().split('=')));
 	}
 
 	function initCanvas() {
@@ -169,13 +256,14 @@
 
 	const [CANVAS, CONTEXT] = initCanvas();
 
+
 	canvas.addEventListener('touchstart', touchstart);
 	canvas.addEventListener('touchmove', draw);
 	canvas.addEventListener('mousedown', mousedown);
 	canvas.addEventListener('mouseup', mouseup);
 	//eraser.addEventListener('click', changeEraserState);
 
-	let coord = {'x': 0, 'y': 0}
+
 
 	function getPosition(event) {
 		coord.x = event.clientX || event.touches[0].clientX;
@@ -198,7 +286,7 @@
 	}
 
 	function draw() {
-		let array = new Uint16Array(4);
+		let array = new Uint16Array(5);
 		CONTEXT.beginPath();
 		CONTEXT.moveTo(coord.x, coord.y);
 		array[0] = coord.x;
@@ -207,20 +295,43 @@
 		CONTEXT.lineTo(coord.x, coord.y);
 		array[2] = coord.x;
 		array[3] = coord.y;
+		array[4] = USERID;
 		CONTEXT.stroke();
 		CONTEXT.closePath();
-		if (WS.readyState == 1) {
-			WS.send(array);
-		}
+		if (WS.readyState == 1) { WS.send(array) }
 
 	}
 
-	function drawOthers(coords) {
+	function drawUsers(array) {
 	  CONTEXT.beginPath();
-	  CONTEXT.moveTo(coords[0], coords[1]);
-		CONTEXT.lineTo(coords[2], coords[3]);
+		CONTEXT.strokeStyle = USERS[array[4]]['color'];
+	  CONTEXT.moveTo(array[0], array[1]);
+		CONTEXT.lineTo(array[2], array[3]);
 		CONTEXT.stroke();
 	}
 
+	function changeColor(color) {
+		CONTEXT.strokeStyle = color;
+		WS.send(stringify({'action': 'changeColor', 'userid': USERID, 'color': color}));
+	}
+
+	/*
+		const random = (...args) => {
+			if (args[1]) return Math.round(args[0] + Math.random() * (args[1] - args[0]));
+			 else  return Math.round(Math.random()*args[0]);
+		}
+		const generateColor = (...args) => { return 'rgba(' +random(...args)+ ',' +random(...args)+ ',' +random(...args)+ ')' }
+
+		const generatePrettyColor = () => {
+			let colors = {
+				'red': random(255),
+				'green': random(255),
+				'blue': random(255)
+			}
+			let dominantColor = Object.keys(colors)[Math.round(Math.random() * 2)];
+			colors[dominantColor] = 255;
+			return 'rgba(' +colors["red"]+ ',' +colors["green"]+ ',' +colors["blue"]+ ')';
+		}
+	*/
 	</script>
 </html>
