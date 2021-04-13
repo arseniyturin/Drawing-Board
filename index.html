@@ -1,162 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="user-scalable=no">
-	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-	<meta http-equiv="Pragma" content="no-cache" />
-	<meta http-equiv="Expires" content="0" />
-	<title>Drawing Board</title>
-	<style>
-		html, body {
-			margin: 0;
-			padding: 0;
-			color: #444;
-			font-family: arial;
-		}
-		#users {
-			padding: 10px;
-			border: 1px #f0f0f0 solid;
-			position: absolute;
-			top: 14px;
-			left: 14px;
-			z-index: 0;
-		}
+<meta charset="UTF-8">
+<meta name="viewport" content="user-scalable=no">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<title>Drawing Board</title>
+<style>
+html, body {
+	margin: 0;
+	padding: 0;
+	color: #444;
+	font-family: arial;
+}
+#users {
+	padding: 10px;
+	border: 1px #f0f0f0 solid;
+	position: absolute;
+	top: 14px;
+	left: 14px;
+	z-index: 0;
+}
 
-		#saveImage {
-		display: block;
-		position: absolute;
-		top: 14px;
-		right: 14px;
-		cursor: pointer;
-		text-align: center;
-		z-index: 100;
-		border: 1px #e0e0e0 solid;
-		padding: 10px 20px;
-		font-size: 13px;
-		border-radius: 4px;
-		user-select: none;
+#saveImage {
+	display: block;
+	position: absolute;
+	top: 14px;
+	right: 14px;
+	cursor: pointer;
+	text-align: center;
+	z-index: 100;
+	border: 1px #e0e0e0 solid;
+	padding: 10px 20px;
+	font-size: 13px;
+	border-radius: 4px;
+	user-select: none;
 }
 #eraser {
-      border: 1px #e0e0e0 solid;
-      position: absolute;
-      top: 14px;
-      right: 0;
-      margin-right: 100px;
-      display: block;
-      z-index: 100;
-      text-align: center;
-      /*color: #e0e0e0;*/
-      padding: 10px 20px;
-      cursor: pointer;
-      border-radius: 4px;
-      user-select: none;
+	border: 1px #e0e0e0 solid;
+	position: absolute;
+	top: 14px;
+	right: 0;
+	margin-right: 100px;
+	display: block;
+	z-index: 100;
+	text-align: center;
+	/*color: #e0e0e0;*/
+	padding: 10px 20px;
+	cursor: pointer;
+	border-radius: 4px;
+	user-select: none;
 	font-size: 13px;
-		}
-		.eraser_active {
-		  background-color: #5aa2e1;
-		color: #fff;
-		}
+}
+.eraser_active {
+	background-color: #5aa2e1;
+	color: #fff;
+}
+.user {
+	padding: 4px;
+}
+#blank {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	background-color: #000;
+	opacity: .5;
+	visibility: hidden;
+	z-index: 150;
+}
+.userName {
+	user-select: none;
+	display: inline-block;
+	font-size: 13px;
+	vertical-align: top;
+	margin-top: 3px;
+	margin-left: 8px;
+	color: #555;
+}
+#changeUsername_field {
+	display: block;
+	position: absolute;
+	top: 45%;
+	left: 50%;
+	width: 360px;
+	margin-left: -190px;
+	padding: 5px 10px;
+	border: 1px #767676 solid;
+	font-size: 22px;
+	border-radius: 4px;
+	box-shadow: 0px 2px 7px #5d5d5d;
+	box-sizing: border-box;
+	z-index: 151;
+	visibility: hidden;
+}
+#changeUsername_field:focus {
+	outline: none;
+}
+#canvas {
+	position: absolute;
+	display: block;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+#colorPicker {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	padding: 10px;
+	border: 1px #f6f6f6 solid;
+	z-index: 100;
+}
+.color{
+	width: 20px;
+	height: 20px;
+	border-radius: 10px;
+	margin: 5px;
+	cursor: pointer;
+}
+</style>
+</head>
+<body>
 
+<div id="users"></div>
+<div id="eraser">ERASE</div>
+<div id="saveImage">SAVE</div>
+<div id="blank"></div>
+<input type="text" id="changeUsername_field" />
 
-		.user {
-			padding: 4px;
-		}
-		#blank {
-		  position: absolute;
-		  width: 100%;
-		  height: 100%;
-		  top: 0;
-		  left: 0;
-		  background-color: #000;
-		  opacity: .5;
-		  visibility: hidden;
-		  z-index: 150;
-		}
-		.userName {
-			user-select: none;
-			display: inline-block;
-			font-size: 13px;
-			vertical-align: top;
-			margin-top: 3px;
-			margin-left: 8px;
-			color: #555;
-		}
-		#changeUsername_field {
-		  display: block;
-		  position: absolute;
-		  top: 45%;
-		  left: 50%;
-      width: 360px;
-      margin-left: -190px;
-      padding: 5px 10px;
-      border: 1px #767676 solid;
-      font-size: 22px;
-      border-radius: 4px;
-      box-shadow: 0px 2px 7px #5d5d5d;
-      box-sizing: border-box;
-      z-index: 151;
-      visibility: hidden;
-		}
-		#changeUsername_field:focus {
-		  outline: none;
-		}
-		#canvas {
-		  position: absolute;
-		  display: block;
-		  top: 0;
-		  left: 0;
-		  width: 100%;
-		  height: 100%;
-		}
-		#colorPicker {
-			position: absolute;
-			top: 10px;
-			left: 10px;
-			padding: 10px;
-			border: 1px #f6f6f6 solid;
-			z-index: 100;
-		}
-		.color{
-			width: 20px;
-			height: 20px;
-			border-radius: 10px;
-			margin: 5px;
-			cursor: pointer;
-		}
-  </style>
-  </head>
-  <body>
-
-		<div id="users"></div>
-		<div id="eraser">ERASE</div>
-		<div id="saveImage">SAVE</div>
-		<div id="blank"></div>
-		<input type="text" id="changeUsername_field" />
-
-		<div id="colorPicker">
-			<div class="color" onclick="changeColor('#f44336');" style="background-color: #f44336"></div>
-			<div class="color" onclick="changeColor('#e91e63');" style="background-color: #e91e63"></div>
-			<div class="color" onclick="changeColor('#9c27b0');" style="background-color: #9c27b0"></div>
-			<div class="color" onclick="changeColor('#673ab7');" style="background-color: #673ab7"></div>
-			<div class="color" onclick="changeColor('#3f51b5');" style="background-color: #3f51b5"></div>
-			<div class="color" onclick="changeColor('#2196f3');" style="background-color: #2196f3"></div>
-			<div class="color" onclick="changeColor('#03a9f4');" style="background-color: #03a9f4"></div>
-			<div class="color" onclick="changeColor('#00bcd4');" style="background-color: #00bcd4"></div>
-			<div class="color" onclick="changeColor('#009688');" style="background-color: #009688"></div>
-			<div class="color" onclick="changeColor('#4caf50');" style="background-color: #4caf50"></div>
-			<div class="color" onclick="changeColor('#8bc34a');" style="background-color: #8bc34a"></div>
-			<div class="color" onclick="changeColor('#cddc39');" style="background-color: #cddc39"></div>
-			<div class="color" onclick="changeColor('#ffeb3b');" style="background-color: #ffeb3b"></div>
-			<div class="color" onclick="changeColor('#ffc107');" style="background-color: #ffc107"></div>
-			<div class="color" onclick="changeColor('#ff9800');" style="background-color: #ff9800"></div>
-			<div class="color" onclick="changeColor('#ff5722');" style="background-color: #ff5722"></div>
-			<div class="color" onclick="changeColor('#9e9e9e');" style="background-color: #9e9e9e"></div>
-			<div class="color" onclick="changeColor('#795548');" style="background-color: #795548"></div>
-		</div>
-		<canvas id="canvas"></canvas>
-  </body>
-	<script type="text/javascript">
+<div id="colorPicker">
+<div class="color" onclick="changeColor('#f44336');" style="background-color: #f44336"></div>
+<div class="color" onclick="changeColor('#e91e63');" style="background-color: #e91e63"></div>
+<div class="color" onclick="changeColor('#9c27b0');" style="background-color: #9c27b0"></div>
+<div class="color" onclick="changeColor('#673ab7');" style="background-color: #673ab7"></div>
+<div class="color" onclick="changeColor('#3f51b5');" style="background-color: #3f51b5"></div>
+<div class="color" onclick="changeColor('#2196f3');" style="background-color: #2196f3"></div>
+<div class="color" onclick="changeColor('#03a9f4');" style="background-color: #03a9f4"></div>
+<div class="color" onclick="changeColor('#00bcd4');" style="background-color: #00bcd4"></div>
+<div class="color" onclick="changeColor('#009688');" style="background-color: #009688"></div>
+<div class="color" onclick="changeColor('#4caf50');" style="background-color: #4caf50"></div>
+<div class="color" onclick="changeColor('#8bc34a');" style="background-color: #8bc34a"></div>
+<div class="color" onclick="changeColor('#cddc39');" style="background-color: #cddc39"></div>
+<div class="color" onclick="changeColor('#ffeb3b');" style="background-color: #ffeb3b"></div>
+<div class="color" onclick="changeColor('#ffc107');" style="background-color: #ffc107"></div>
+<div class="color" onclick="changeColor('#ff9800');" style="background-color: #ff9800"></div>
+<div class="color" onclick="changeColor('#ff5722');" style="background-color: #ff5722"></div>
+<div class="color" onclick="changeColor('#9e9e9e');" style="background-color: #9e9e9e"></div>
+<div class="color" onclick="changeColor('#795548');" style="background-color: #795548"></div>
+</div>
+<canvas id="canvas"></canvas>
+</body>
+<script type="text/javascript">
 
 	const ADDRESS = location.origin.replace(/^http/, 'ws');
 	const WS = createSocket();
@@ -173,10 +171,9 @@
 
 	function keepAlive(WS, interval=30000) {
 		window.setInterval((e) => {
-			WS.send( stringify({'ka':1}) ); 
+			WS.send( stringify({'ka':1}) );
 			console.log('sending keep alive');
 		}, interval);
-
 	}
 
 	function createSocket() {
@@ -184,41 +181,30 @@
 		WS.binaryType = 'arraybuffer';
 		return WS;
 	}
+
 	keepAlive(WS);
 
 	function createUser() {
-
 		// 1. Generate USERID
 		USERID = parseInt(String(Date.now()).substr(9));
 		// 2. Generate USERNAME or get it from Cookies
-		const usernames = ['James','Mary','John','Patricia','Robert','Jennifer','Michael','Linda','William',
-                    'Elizabeth','David','Barbara','Richard','Susan','Joseph','Jessica','Thomas','Sarah',
-                    'Charles','Karen','Daniel','Lisa','Mark','Emily','Andrew','Donna','Kevin','Carol',
-                    'Joshua','Melissa','Timothy','Amy','Gary','Angela','Larry','Nicole','Frank','Ruth'];
+		const usernames = ['James','Mary','John','Patricia','Robert','Jennifer','Michael','Linda','William','Elizabeth','David','Barbara','Richard','Susan','Joseph','Jessica','Thomas','Sarah','Charles','Karen','Daniel','Lisa','Mark','Emily','Andrew','Donna','Kevin','Carol','Joshua','Melissa','Timothy','Amy','Gary','Angela','Larry','Nicole','Frank','Ruth'];
 
 		if (getCookie()['drawing'] != undefined) {
-
 			USERNAME = decodeURIComponent(getCookie()['drawing']);
 			document.title = USERNAME;
-
 		} else {
-
 			USERNAME = usernames[random(usernames.length-1)];
 			document.title = USERNAME;
-
 		}
 
-		WS.send(
-			JSON.stringify(
-			{
-				'action': 'init',
-				'userid': USERID,
-				'username': USERNAME,
-				'color': COLOR,
-				'width': 5
-			}
-		)
-	);
+		WS.send(JSON.stringify({
+			'action': 'init',
+			'userid': USERID,
+			'username': USERNAME,
+			'color': COLOR,
+			'width': 5
+		}));
 
 
 	}
@@ -232,7 +218,7 @@
 	WS.onclose = () => {
 		console.log('Connection is closed');
 	}
-	// Receive message from server
+// Receive message from server
 	WS.onmessage = (message) => {
 
 		if (message.data instanceof ArrayBuffer) {
@@ -246,34 +232,34 @@
 
 			switch (data['action']) {
 
-				case 'changeUsername':
-					console.log('Changing username');
-					break;
+			case 'changeUsername':
+				console.log('Changing username');
+				break;
 
-				case 'changeColor':
-					USERS[data['userid']]['color'] = data['color'];
-					USERS[data['userid']]['width'] = data['width'];
-					break;
+			case 'changeColor':
+				USERS[data['userid']]['color'] = data['color'];
+				USERS[data['userid']]['width'] = data['width'];
+				break;
 
-				case 'deleteUser':
-					delete USERS[data['userid']];
-					break;
+			case 'deleteUser':
+				delete USERS[data['userid']];
+				break;
 
-				case 'loadUsers':
-					USERS = data['users'];
-					break;
+			case 'loadUsers':
+				USERS = data['users'];
+				break;
 			}
 		}
 	}
 
 	function setCookie(username) {
-  	let later = new Date().getTime() * 2;
-  	document.cookie = 'circles='+encodeURIComponent(username)+';expires=' +(new Date(later)).toUTCString();
-  	console.log('Set Cookie for '+username);
+		let later = new Date().getTime() * 2;
+		document.cookie = 'circles='+encodeURIComponent(username)+';expires=' +(new Date(later)).toUTCString();
+		console.log('Set Cookie for '+username);
 	}
 
 	function getCookie() {
-  	return Object.fromEntries(document.cookie.split(';').map((e)=>e.trim().split('=')));
+		return Object.fromEntries(document.cookie.split(';').map((e)=>e.trim().split('=')));
 	}
 
 	function initCanvas() {
@@ -284,7 +270,7 @@
 		context.lineWidth = 5;
 		context.lineCap = 'round';
 		context.strokeStyle = '#444444';
-		return [canvas, context]
+		return [canvas, context];
 	}
 
 	const [CANVAS, CONTEXT] = initCanvas();
@@ -293,14 +279,11 @@
 	CONTEXT.fillStyle = "#ffffff";
 	CONTEXT.fill();
 
-
 	canvas.addEventListener('touchstart', touchstart);
 	canvas.addEventListener('touchmove', draw);
 	canvas.addEventListener('mousedown', mousedown);
 	canvas.addEventListener('mouseup', mouseup);
 	eraser.addEventListener('click', changeEraserState);
-
-
 
 	function getPosition(event) {
 		coord.x = event.clientX || event.touches[0].clientX;
@@ -311,7 +294,6 @@
 		event.preventDefault();
 		getPosition(event);
 	}
-
 	// Activate drawing
 	function mousedown() {
 		getPosition(event);
@@ -338,17 +320,14 @@
 		CONTEXT.stroke();
 		CONTEXT.closePath();
 		if (WS.readyState == 1) { WS.send(array) }
-
 	}
 
 	function drawUsers(array) {
 		if (USERID != array[4]) {
-
-
 			CONTEXT.beginPath();
 			CONTEXT.strokeStyle = USERS[array[4]]['color'];
 			CONTEXT.lineWidth = USERS[array[4]]['width'];
-		  CONTEXT.moveTo(array[0], array[1]);
+			CONTEXT.moveTo(array[0], array[1]);
 			CONTEXT.lineTo(array[2], array[3]);
 			CONTEXT.stroke();
 		}
@@ -358,50 +337,58 @@
 		CONTEXT.strokeStyle = color;
 		COLOR = color;
 		if (eraserState == 1) changeEraserState();
-		WS.send(stringify({'action': 'changeColor', 'userid': USERID, 'color': COLOR, 'width': 5}));
+		WS.send(stringify({
+			'action': 'changeColor',
+			'userid': USERID,
+			'color': COLOR, 'width': 5
+		}));
 	}
 
 	function changeEraserState() {
-  if (eraserState==0) {
-    eraser.classList.add('eraser_active');
+		if (eraserState==0) {
+		eraser.classList.add('eraser_active');
 		CONTEXT.strokeStyle = '#ffffff';
 		CONTEXT.lineWidth = 25;
-		WS.send(stringify({'action': 'changeColor', 'userid': USERID, 'color': '#ffffff', 'width': 25}));
-    eraserState = 1;
-  }
-  else {
-    eraser.classList.remove('eraser_active');
+		WS.send(stringify({
+			'action': 'changeColor',
+			'userid': USERID,
+			'color': '#ffffff',
+			'width': 25
+		}));
+		eraserState = 1;
+		} else {
+		eraser.classList.remove('eraser_active');
 		WS.send(stringify({'action': 'changeColor', 'userid': USERID, 'color': COLOR, 'width': 5}));
-    eraserState = 0;
-  }
-}
+		eraserState = 0;
+		}
+	}
 
-// Save Image
-saveImage.onclick = () => {
-	const image64 = canvas.toDataURL('image/png', 1.0);
-	const a = document.createElement('a');
-	a.download = 'drawing.png';
-	a.href = image64;
-	a.click();
+	// Save Image
+	saveImage.onclick = () => {
+		const image64 = canvas.toDataURL('image/png', 1.0);
+		const a = document.createElement('a');
+		a.download = 'drawing.png';
+		a.href = image64;
+		a.click();
 	//window.location.href = image64.replace("image/png", "image/octet-stream");
-}
+	}
 
-		const random = (...args) => {
-			if (args[1]) return Math.round(args[0] + Math.random() * (args[1] - args[0]));
-			 else  return Math.round(Math.random()*args[0]);
+	const random = (...args) => {
+		if (args[1]) return Math.round(args[0] + Math.random() * (args[1] - args[0]));
+		else  return Math.round(Math.random()*args[0]);
+	}
+	const generateColor = (...args) => { return 'rgba(' +random(...args)+ ',' +random(...args)+ ',' +random(...args)+ ')' }
+
+	const generatePrettyColor = () => {
+		let colors = {
+			'red': random(255),
+			'green': random(255),
+			'blue': random(255)
 		}
-		const generateColor = (...args) => { return 'rgba(' +random(...args)+ ',' +random(...args)+ ',' +random(...args)+ ')' }
+		let dominantColor = Object.keys(colors)[Math.round(Math.random() * 2)];
+		colors[dominantColor] = 255;
+		return 'rgba(' +colors["red"]+ ',' +colors["green"]+ ',' +colors["blue"]+ ')';
+	}
 
-		const generatePrettyColor = () => {
-			let colors = {
-				'red': random(255),
-				'green': random(255),
-				'blue': random(255)
-			}
-			let dominantColor = Object.keys(colors)[Math.round(Math.random() * 2)];
-			colors[dominantColor] = 255;
-			return 'rgba(' +colors["red"]+ ',' +colors["green"]+ ',' +colors["blue"]+ ')';
-		}
-
-	</script>
+</script>
 </html>
