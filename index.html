@@ -320,7 +320,7 @@
 
 	function draw() {
 		let array = new Uint16Array(5);
-		//CONTEXT.strokeStyle = COLOR;
+		CONTEXT.strokeStyle = USERS[USERID]['color'];
 		CONTEXT.lineWidth = USERS[USERID]['width'];
 		CONTEXT.beginPath();
 		CONTEXT.moveTo(coord.x, coord.y);
@@ -338,12 +338,16 @@
 	}
 
 	function drawUsers(array) {
-	  CONTEXT.beginPath();
-		CONTEXT.strokeStyle = USERS[array[4]]['color'];
-		CONTEXT.lineWidth = USERS[array[4]]['width'];
-	  CONTEXT.moveTo(array[0], array[1]);
-		CONTEXT.lineTo(array[2], array[3]);
-		CONTEXT.stroke();
+		if (USERID != array[4]) {
+
+
+			CONTEXT.beginPath();
+			CONTEXT.strokeStyle = USERS[array[4]]['color'];
+			CONTEXT.lineWidth = USERS[array[4]]['width'];
+		  CONTEXT.moveTo(array[0], array[1]);
+			CONTEXT.lineTo(array[2], array[3]);
+			CONTEXT.stroke();
+		}
 	}
 
 	function changeColor(color) {
