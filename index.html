@@ -320,6 +320,8 @@
 
 	function draw() {
 		let array = new Uint16Array(5);
+		//CONTEXT.strokeStyle = COLOR;
+		CONTEXT.lineWidth = USERS[USERID]['width'];
 		CONTEXT.beginPath();
 		CONTEXT.moveTo(coord.x, coord.y);
 		array[0] = coord.x;
@@ -347,13 +349,15 @@
 	function changeColor(color) {
 		CONTEXT.strokeStyle = color;
 		COLOR = color;
-		WS.send(stringify({'action': 'changeColor', 'userid': USERID, 'color': COLOR, 'width': 5}));
 		if (eraserState == 1) changeEraserState();
+		WS.send(stringify({'action': 'changeColor', 'userid': USERID, 'color': COLOR, 'width': 5}));
 	}
 
 	function changeEraserState() {
   if (eraserState==0) {
     eraser.classList.add('eraser_active');
+		CONTEXT.strokeStyle = '#ffffff';
+		CONTEXT.lineWidth = 25;
 		WS.send(stringify({'action': 'changeColor', 'userid': USERID, 'color': '#ffffff', 'width': 25}));
     eraserState = 1;
   }
