@@ -375,7 +375,11 @@
 // Save Image
 saveImage.onclick = () => {
 	const image64 = canvas.toDataURL('image/png', 1.0);
-	window.location.href = image64.replace("image/png", "image/octet-stream");
+	const a = document.createElement('a');
+	a.download = 'drawing.png';
+	a.href = image64;
+	a.click();
+	//window.location.href = image64.replace("image/png", "image/octet-stream");
 }
 
 		const random = (...args) => {
