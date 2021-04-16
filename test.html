@@ -1,0 +1,60 @@
+<p id="hello">hello</p>
+
+
+<script>
+
+
+class Base {
+  constructor(address) {
+    this.address = address;
+  }
+
+  baseMethod(name) {
+    this.name = name;
+    console.log(name);
+  }
+
+}
+
+
+class Helper extends Base {
+  constructor(...args) {
+    super(args[0]);
+  }
+}
+
+let b = new Helper('localhost');
+
+//b.bufferArray = 'arraybuffer';
+
+console.log(b);
+
+
+
+class Hello {
+  constructor(el) {
+    let a = document.getElementById(el);
+    a.addEventListener('click', this.click);
+    console.log(a);
+  }
+  click() {
+    console.log('Clicked');
+  }
+}
+
+let c = new Hello('hello');
+
+
+function A(B) {
+  console.log(B);
+}
+
+function B() {
+  return 5;
+}
+
+A(B());
+
+
+
+</script>

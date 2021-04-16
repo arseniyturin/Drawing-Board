@@ -22,7 +22,6 @@ html, body {
 	left: 14px;
 	z-index: 0;
 }
-
 #saveImage {
 	display: block;
 	position: absolute;
@@ -133,262 +132,264 @@ html, body {
 <input type="text" id="changeUsername_field" />
 
 <div id="colorPicker">
-<div class="color" onclick="changeColor('#f44336');" style="background-color: #f44336"></div>
-<div class="color" onclick="changeColor('#e91e63');" style="background-color: #e91e63"></div>
-<div class="color" onclick="changeColor('#9c27b0');" style="background-color: #9c27b0"></div>
-<div class="color" onclick="changeColor('#673ab7');" style="background-color: #673ab7"></div>
-<div class="color" onclick="changeColor('#3f51b5');" style="background-color: #3f51b5"></div>
-<div class="color" onclick="changeColor('#2196f3');" style="background-color: #2196f3"></div>
-<div class="color" onclick="changeColor('#03a9f4');" style="background-color: #03a9f4"></div>
-<div class="color" onclick="changeColor('#00bcd4');" style="background-color: #00bcd4"></div>
-<div class="color" onclick="changeColor('#009688');" style="background-color: #009688"></div>
-<div class="color" onclick="changeColor('#4caf50');" style="background-color: #4caf50"></div>
-<div class="color" onclick="changeColor('#8bc34a');" style="background-color: #8bc34a"></div>
-<div class="color" onclick="changeColor('#cddc39');" style="background-color: #cddc39"></div>
-<div class="color" onclick="changeColor('#ffeb3b');" style="background-color: #ffeb3b"></div>
-<div class="color" onclick="changeColor('#ffc107');" style="background-color: #ffc107"></div>
-<div class="color" onclick="changeColor('#ff9800');" style="background-color: #ff9800"></div>
-<div class="color" onclick="changeColor('#ff5722');" style="background-color: #ff5722"></div>
-<div class="color" onclick="changeColor('#9e9e9e');" style="background-color: #9e9e9e"></div>
-<div class="color" onclick="changeColor('#795548');" style="background-color: #795548"></div>
+<div class="color" onclick="APP.changeColor('#f44336');" style="background-color: #f44336"></div>
+<div class="color" onclick="APP.changeColor('#e91e63');" style="background-color: #e91e63"></div>
+<div class="color" onclick="APP.changeColor('#9c27b0');" style="background-color: #9c27b0"></div>
+<div class="color" onclick="APP.changeColor('#673ab7');" style="background-color: #673ab7"></div>
+<div class="color" onclick="APP.changeColor('#3f51b5');" style="background-color: #3f51b5"></div>
+<div class="color" onclick="APP.changeColor('#2196f3');" style="background-color: #2196f3"></div>
+<div class="color" onclick="APP.changeColor('#03a9f4');" style="background-color: #03a9f4"></div>
+<div class="color" onclick="APP.changeColor('#00bcd4');" style="background-color: #00bcd4"></div>
+<div class="color" onclick="APP.changeColor('#009688');" style="background-color: #009688"></div>
+<div class="color" onclick="APP.changeColor('#4caf50');" style="background-color: #4caf50"></div>
+<div class="color" onclick="APP.changeColor('#8bc34a');" style="background-color: #8bc34a"></div>
+<div class="color" onclick="APP.changeColor('#cddc39');" style="background-color: #cddc39"></div>
+<div class="color" onclick="APP.changeColor('#ffeb3b');" style="background-color: #ffeb3b"></div>
+<div class="color" onclick="APP.changeColor('#ffc107');" style="background-color: #ffc107"></div>
+<div class="color" onclick="APP.changeColor('#ff9800');" style="background-color: #ff9800"></div>
+<div class="color" onclick="APP.changeColor('#ff5722');" style="background-color: #ff5722"></div>
+<div class="color" onclick="APP.changeColor('#9e9e9e');" style="background-color: #9e9e9e"></div>
+<div class="color" onclick="APP.changeColor('#795548');" style="background-color: #795548"></div>
 </div>
 <canvas id="canvas"></canvas>
 </body>
 <script type="text/javascript">
 
-	const ADDRESS = location.origin.replace(/^http/, 'ws');
-	const WS = createSocket();
-	let USERS = {}
-	let USERNAME;
-	let USERID;
-	let COLOR = '#000000';
-	let coord = {'x': 0, 'y': 0}
-	let eraserState = 0;
-	const eraser = document.getElementById('eraser');
+	'use strict';
 
-	const stringify = (e) => { return JSON.stringify(e) };
-	const parse = (e) => { return JSON.parse(e) };
+	class Helper {
 
-	function keepAlive(WS, interval=30000) {
-		window.setInterval((e) => {
-			WS.send( stringify({'ka':1}) );
-			console.log('sending keep alive');
-		}, interval);
-	}
-
-	function createSocket() {
-		const WS = new WebSocket(ADDRESS);
-		WS.binaryType = 'arraybuffer';
-		return WS;
-	}
-
-	keepAlive(WS);
-
-	function createUser() {
-		// 1. Generate USERID
-		USERID = parseInt(String(Date.now()).substr(9));
-		// 2. Generate USERNAME or get it from Cookies
-		const usernames = ['James','Mary','John','Patricia','Robert','Jennifer','Michael','Linda','William','Elizabeth','David','Barbara','Richard','Susan','Joseph','Jessica','Thomas','Sarah','Charles','Karen','Daniel','Lisa','Mark','Emily','Andrew','Donna','Kevin','Carol','Joshua','Melissa','Timothy','Amy','Gary','Angela','Larry','Nicole','Frank','Ruth'];
-
-		if (getCookie()['drawing'] != undefined) {
-			USERNAME = decodeURIComponent(getCookie()['drawing']);
-			document.title = USERNAME;
-		} else {
-			USERNAME = usernames[random(usernames.length-1)];
-			document.title = USERNAME;
+		static random(...args) {
+			if (args[1]) return Math.round(args[0] + Math.random() * (args[1] - args[0]));
+			else  return Math.round(Math.random()*args[0]);
 		}
 
-		WS.send(JSON.stringify({
-			'action': 'init',
-			'userid': USERID,
-			'username': USERNAME,
-			'color': COLOR,
-			'width': 5
-		}));
+		static generateColor(...args) {
+			return 'rgba(' +random(...args)+ ',' +random(...args)+ ',' +random(...args)+ ')';
+		}
 
-
+		static generatePrettyColor() {
+			let colors = {
+				'red': random(255),
+				'green': random(255),
+				'blue': random(255)
+			}
+			let dominantColor = Object.keys(colors)[Math.round(Math.random() * 2)];
+			colors[dominantColor] = 255;
+			return 'rgba(' +colors["red"]+ ',' +colors["green"]+ ',' +colors["blue"]+ ')';
+		}
 	}
 
-	// Client connected to server
-	WS.onopen = () => {
-		console.log('Connected to Server at:', WS.url);
-		createUser();
-	}
-	// Server closed the connection or it's crashed
-	WS.onclose = () => {
-		console.log('Connection is closed');
-	}
-// Receive message from server
-	WS.onmessage = (message) => {
+	class drawingBoard extends WebSocket{
+		constructor(id, address) {
+			super(address);
+			this.binaryType = 'arraybuffer';
+			this.addEventListener('open', this.open);
+			this.addEventListener('close', this.close);
+			this.addEventListener('message', this.message);
+			this.ERASER = document.getElementById('eraser');
+			this.CANVAS = document.getElementById(id);
+			this.CONTEXT = this.CANVAS.getContext('2d');
+			this.CONTEXT.canvas.width = this.CANVAS.offsetWidth;
+			this.CONTEXT.canvas.height = this.CANVAS.offsetHeight;
+			this.CONTEXT.lineWidth = 5;
+			this.CONTEXT.lineCap = 'round';
+			this.CONTEXT.strokeStyle = '#444444';
+			this.CONTEXT.rect(0, 0, this.CANVAS.offsetWidth, this.CANVAS.offsetHeight);
+			this.CONTEXT.fillStyle = "#ffffff";
+			this.CONTEXT.fill();
+			this.draw = this.draw.bind(this);
+			this.touchstart =  this.touchstart.bind(this);
+			this.mousedown = this.mousedown.bind(this);
+			this.mouseup = this.mouseup.bind(this);
+			this.changeEraserState = this.changeEraserState.bind(this);
+			this.CANVAS.addEventListener('touchstart', this.touchstart);
+			this.CANVAS.addEventListener('touchmove', this.draw);
+			this.CANVAS.addEventListener('mousedown', this.mousedown);
+			this.CANVAS.addEventListener('mouseup', this.mouseup);
+			this.ERASER.addEventListener('click', this.changeEraserState);
+			this.users = {}
+			this.username;
+			this.userid;
+			this.color = '#000000';
+			this.width = 5;
+			this.coord = {'x': 0, 'y': 0}
+			this.eraserState = 0;
+		}
 
-		if (message.data instanceof ArrayBuffer) {
+		open() {
+			console.log('Opened: ' + this.url);
+			this.createUser();
+		}
 
-			let arr = new Uint16Array(message.data);
-			drawUsers(arr);
+		close() {
+			console.log('Connection is closed');
+		}
 
-		} else {
+		createUser() {
+			// 1. Generate userid
+			this.userid = parseInt(String(Date.now()).substr(9));
+			// 2. Generate username or get it from Cookies
+			const usernames = ['James','Mary','John','Patricia','Robert','Jennifer','Michael','Linda','William','Elizabeth','David','Barbara','Richard','Susan','Joseph','Jessica','Thomas','Sarah','Charles','Karen','Daniel','Lisa','Mark','Emily','Andrew','Donna','Kevin','Carol','Joshua','Melissa','Timothy','Amy','Gary','Angela','Larry','Nicole','Frank','Ruth'];
 
-			let data = parse(message.data);
+			if (this.getCookie()['drawing'] != undefined) {
+				this.username = decodeURIComponent(this.getCookie()['drawing']);
+			} else {
+				this.username = usernames[Helper.random(usernames.length-1)];
+			}
 
-			switch (data['action']) {
+			document.title = this.username;
 
-			case 'changeUsername':
-				console.log('Changing username');
-				break;
+			this.send(JSON.stringify({
+				'action': 'init',
+				'userid': this.userid,
+				'username': this.username,
+				'color': this.color,
+				'width': this.width
+			}));
 
-			case 'changeColor':
-				USERS[data['userid']]['color'] = data['color'];
-				USERS[data['userid']]['width'] = data['width'];
-				break;
+		}
 
-			case 'deleteUser':
-				delete USERS[data['userid']];
-				break;
-
-			case 'loadUsers':
-				USERS = data['users'];
-				break;
+		message(message) {
+			if (message.data instanceof ArrayBuffer) {
+				// This happends only when we send mouse coordinates along with userid
+				let array = new Uint16Array(message.data);
+				this.drawUsers(array);
+			} else {
+				let data = JSON.parse(message.data);
+				switch (data['action']) {
+					case 'changeUsername':
+						console.log('Changing username');
+						break;
+					case 'changeColor':
+						this.users[data['userid']]['color'] = data['color'];
+						this.users[data['userid']]['width'] = data['width'];
+						break;
+					case 'deleteUser':
+						delete this.users[data['userid']];
+						break;
+					case 'loadUsers':
+						this.users = data['users'];
+						break;
+				}
 			}
 		}
-	}
 
-	function setCookie(username) {
-		let later = new Date().getTime() * 2;
-		document.cookie = 'circles='+encodeURIComponent(username)+';expires=' +(new Date(later)).toUTCString();
-		console.log('Set Cookie for '+username);
-	}
-
-	function getCookie() {
-		return Object.fromEntries(document.cookie.split(';').map((e)=>e.trim().split('=')));
-	}
-
-	function initCanvas() {
-		const canvas = document.getElementById('canvas');
-		const context = canvas.getContext('2d');
-		context.canvas.width = canvas.offsetWidth;
-		context.canvas.height = canvas.offsetHeight;
-		context.lineWidth = 5;
-		context.lineCap = 'round';
-		context.strokeStyle = '#444444';
-		return [canvas, context];
-	}
-
-	const [CANVAS, CONTEXT] = initCanvas();
-
-	CONTEXT.rect(0, 0, CANVAS.offsetWidth, CANVAS.offsetHeight);
-	CONTEXT.fillStyle = "#ffffff";
-	CONTEXT.fill();
-
-	canvas.addEventListener('touchstart', touchstart);
-	canvas.addEventListener('touchmove', draw);
-	canvas.addEventListener('mousedown', mousedown);
-	canvas.addEventListener('mouseup', mouseup);
-	eraser.addEventListener('click', changeEraserState);
-
-	function getPosition(event) {
-		coord.x = event.clientX || event.touches[0].clientX;
-		coord.y = event.clientY || event.touches[0].clientY;
-	}
-
-	function touchstart(event) {
-		event.preventDefault();
-		getPosition(event);
-	}
-	// Activate drawing
-	function mousedown() {
-		getPosition(event);
-		canvas.addEventListener('mousemove', draw);
-	}
-	// Stop drawing with mouse
-	function mouseup() {
-		canvas.removeEventListener('mousemove', draw);
-	}
-
-	function draw() {
-		let array = new Uint16Array(5);
-		CONTEXT.strokeStyle = USERS[USERID]['color'];
-		CONTEXT.lineWidth = USERS[USERID]['width'];
-		CONTEXT.beginPath();
-		CONTEXT.moveTo(coord.x, coord.y);
-		array[0] = coord.x;
-		array[1] = coord.y;
-		getPosition(event);
-		CONTEXT.lineTo(coord.x, coord.y);
-		array[2] = coord.x;
-		array[3] = coord.y;
-		array[4] = USERID;
-		CONTEXT.stroke();
-		CONTEXT.closePath();
-		if (WS.readyState == 1) { WS.send(array) }
-	}
-
-	function drawUsers(array) {
-		if (USERID != array[4]) {
-			CONTEXT.beginPath();
-			CONTEXT.strokeStyle = USERS[array[4]]['color'];
-			CONTEXT.lineWidth = USERS[array[4]]['width'];
-			CONTEXT.moveTo(array[0], array[1]);
-			CONTEXT.lineTo(array[2], array[3]);
-			CONTEXT.stroke();
+		keepAlive(interval=3000) {
+			setInterval(() => {this.send(JSON.stringify({'ka':1}))}, interval);
 		}
-	}
 
-	function changeColor(color) {
-		CONTEXT.strokeStyle = color;
-		COLOR = color;
-		if (eraserState == 1) changeEraserState();
-		WS.send(stringify({
-			'action': 'changeColor',
-			'userid': USERID,
-			'color': COLOR, 'width': 5
-		}));
-	}
-
-	function changeEraserState() {
-		if (eraserState==0) {
-		eraser.classList.add('eraser_active');
-		CONTEXT.strokeStyle = '#ffffff';
-		CONTEXT.lineWidth = 25;
-		WS.send(stringify({
-			'action': 'changeColor',
-			'userid': USERID,
-			'color': '#ffffff',
-			'width': 25
-		}));
-		eraserState = 1;
-		} else {
-		eraser.classList.remove('eraser_active');
-		WS.send(stringify({'action': 'changeColor', 'userid': USERID, 'color': COLOR, 'width': 5}));
-		eraserState = 0;
+		send(data) {
+			return super.send(data);
 		}
-	}
 
-	// Save Image
-	saveImage.onclick = () => {
-		const image64 = canvas.toDataURL('image/png', 1.0);
-		const a = document.createElement('a');
-		a.download = 'drawing.png';
-		a.href = image64;
-		a.click();
-	//window.location.href = image64.replace("image/png", "image/octet-stream");
-	}
-
-	const random = (...args) => {
-		if (args[1]) return Math.round(args[0] + Math.random() * (args[1] - args[0]));
-		else  return Math.round(Math.random()*args[0]);
-	}
-	const generateColor = (...args) => { return 'rgba(' +random(...args)+ ',' +random(...args)+ ',' +random(...args)+ ')' }
-
-	const generatePrettyColor = () => {
-		let colors = {
-			'red': random(255),
-			'green': random(255),
-			'blue': random(255)
+		draw() {
+			let array = new Uint16Array(5);
+			this.CONTEXT.strokeStyle = this.users[this.userid]['color'];
+			this.CONTEXT.lineWidth = this.users[this.userid]['width'];
+			this.CONTEXT.beginPath();
+			this.CONTEXT.moveTo(this.coord.x, this.coord.y);
+			array[0] = this.coord.x;
+			array[1] = this.coord.y;
+			this.getPosition(event);
+			this.CONTEXT.lineTo(this.coord.x, this.coord.y);
+			array[2] = this.coord.x;
+			array[3] = this.coord.y;
+			array[4] = this.userid;
+			this.CONTEXT.stroke();
+			this.CONTEXT.closePath();
+			if (this.readyState == 1) { this.send(array) }
 		}
-		let dominantColor = Object.keys(colors)[Math.round(Math.random() * 2)];
-		colors[dominantColor] = 255;
-		return 'rgba(' +colors["red"]+ ',' +colors["green"]+ ',' +colors["blue"]+ ')';
+
+		drawUsers(array) {
+			if (this.userid != array[4]) {
+				this.CONTEXT.beginPath();
+				this.CONTEXT.strokeStyle = this.users[array[4]]['color'];
+				this.CONTEXT.lineWidth = this.users[array[4]]['width'];
+				this.CONTEXT.moveTo(array[0], array[1]);
+				this.CONTEXT.lineTo(array[2], array[3]);
+				this.CONTEXT.stroke();
+			}
+		}
+		mousedown(event) {
+			this.getPosition(event);
+			this.CANVAS.addEventListener('mousemove', this.draw);
+		}
+
+		mouseup(event) {
+			this.CANVAS.removeEventListener('mousemove',  this.draw);
+		}
+
+		touchstart(event) {
+			event.preventDefault();
+			this.getPosition(event);
+		}
+
+		changeColor(color) {
+			this.CONTEXT.strokeStyle = color;
+			this.color = color;
+			if (this.eraserState == 1) this.changeEraserState();
+			this.send(JSON.stringify({
+				'action': 'changeColor',
+				'userid': this.userid,
+				'color': this.color,
+				'width': 5
+			}));
+		}
+
+		changeEraserState() {
+			if (this.eraserState == 0) {
+				this.ERASER.classList.add('eraser_active');
+				this.CONTEXT.strokeStyle = '#ffffff';
+				this.CONTEXT.lineWidth = 25;
+				this.send(JSON.stringify({
+					'action': 'changeColor',
+					'userid': this.userid,
+					'color': '#ffffff',
+					'width': 25
+				}));
+			this.eraserState = 1;
+
+			} else {
+				this.ERASER.classList.remove('eraser_active');
+				this.send(JSON.stringify({
+					'action': 'changeColor',
+					'userid': this.userid,
+					'color': this.color,
+					'width': 5
+				}));
+				this.eraserState = 0;
+			}
+		}
+
+		saveImage() {
+			const image64 = this.CANVAS.toDataURL('image/png', 1.0);
+			const a = document.createElement('a');
+			a.download = 'drawing.png';
+			a.href = image64;
+			a.click();
+			//window.location.href = image64.replace("image/png", "image/octet-stream");
+		}
+
+		getPosition(event) {
+			this.coord.x = event.clientX || event.touches[0].clientX;
+			this.coord.y = event.clientY || event.touches[0].clientY;
+		}
+
+		setCookie(username) {
+			let later = new Date().getTime() * 2;
+			document.cookie = 'drawing=' + encodeURIComponent(username) + ';expires=' + (new Date(later)).toUTCString();
+			console.log('Set Cookie for ' + username);
+		}
+
+		getCookie() {
+			return Object.fromEntries(document.cookie.split(';').map((e)=>e.trim().split('=')));
+		}
+
 	}
+
+	const ADDRESS = location.origin.replace(/^http/, 'ws');
+	const APP = new drawingBoard('canvas', ADDRESS);
 
 </script>
 </html>
