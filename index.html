@@ -9,117 +9,117 @@
 <title>Drawing Board</title>
 <style>
 html, body {
-	margin: 0;
-	padding: 0;
-	color: #444;
-	font-family: arial;
+  margin: 0;
+  padding: 0;
+  color: #444;
+  font-family: arial;
 }
 #users {
-	padding: 10px;
-	border: 1px #f0f0f0 solid;
-	position: absolute;
-	top: 14px;
-	left: 14px;
-	z-index: 0;
+  padding: 10px;
+  border: 1px #f0f0f0 solid;
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 0;
 }
 #saveImage {
-	display: block;
-	position: absolute;
-	top: 14px;
-	right: 14px;
-	cursor: pointer;
-	text-align: center;
-	z-index: 100;
-	border: 1px #e0e0e0 solid;
-	padding: 10px 20px;
-	font-size: 13px;
-	border-radius: 4px;
-	user-select: none;
+  display: block;
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  cursor: pointer;
+  text-align: center;
+  z-index: 100;
+  border: 1px #e0e0e0 solid;
+  padding: 10px 20px;
+  font-size: 13px;
+  border-radius: 4px;
+  user-select: none;
 }
 #eraser {
-	border: 1px #e0e0e0 solid;
-	position: absolute;
-	top: 14px;
-	right: 0;
-	margin-right: 100px;
-	display: block;
-	z-index: 100;
-	text-align: center;
-	/*color: #e0e0e0;*/
-	padding: 10px 20px;
-	cursor: pointer;
-	border-radius: 4px;
-	user-select: none;
-	font-size: 13px;
+  border: 1px #e0e0e0 solid;
+  position: absolute;
+  top: 14px;
+  right: 0;
+  margin-right: 100px;
+  display: block;
+  z-index: 100;
+  text-align: center;
+  /*color: #e0e0e0;*/
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  user-select: none;
+  font-size: 13px;
 }
 .eraser_active {
-	background-color: #5aa2e1;
-	color: #fff;
+  background-color: #5aa2e1;
+  color: #fff;
 }
 .user {
-	padding: 4px;
+  padding: 4px;
 }
 #blank {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	top: 0;
-	left: 0;
-	background-color: #000;
-	opacity: .5;
-	visibility: hidden;
-	z-index: 150;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: #000;
+  opacity: .5;
+  visibility: hidden;
+  z-index: 150;
 }
 .userName {
-	user-select: none;
-	display: inline-block;
-	font-size: 13px;
-	vertical-align: top;
-	margin-top: 3px;
-	margin-left: 8px;
-	color: #555;
+  user-select: none;
+  display: inline-block;
+  font-size: 13px;
+  vertical-align: top;
+  margin-top: 3px;
+  margin-left: 8px;
+  color: #555;
 }
 #changeUsername_field {
-	display: block;
-	position: absolute;
-	top: 45%;
-	left: 50%;
-	width: 360px;
-	margin-left: -190px;
-	padding: 5px 10px;
-	border: 1px #767676 solid;
-	font-size: 22px;
-	border-radius: 4px;
-	box-shadow: 0px 2px 7px #5d5d5d;
-	box-sizing: border-box;
-	z-index: 151;
-	visibility: hidden;
+  display: block;
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  width: 360px;
+  margin-left: -190px;
+  padding: 5px 10px;
+  border: 1px #767676 solid;
+  font-size: 22px;
+  border-radius: 4px;
+  box-shadow: 0px 2px 7px #5d5d5d;
+  box-sizing: border-box;
+  z-index: 151;
+  visibility: hidden;
 }
 #changeUsername_field:focus {
-	outline: none;
+  outline: none;
 }
 #canvas {
-	position: absolute;
-	display: block;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 #colorPicker {
-	position: absolute;
-	top: 10px;
-	left: 10px;
-	padding: 10px;
-	border: 1px #f6f6f6 solid;
-	z-index: 100;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 10px;
+  border: 1px #f6f6f6 solid;
+  z-index: 100;
 }
 .color{
-	width: 20px;
-	height: 20px;
-	border-radius: 10px;
-	margin: 5px;
-	cursor: pointer;
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  margin: 5px;
+  cursor: pointer;
 }
 </style>
 </head>
@@ -155,241 +155,241 @@ html, body {
 </body>
 <script type="text/javascript">
 
-	'use strict';
+  'use strict';
 
-	class Helper {
+  class Helper {
 
-		static random(...args) {
-			if (args[1]) return Math.round(args[0] + Math.random() * (args[1] - args[0]));
-			else  return Math.round(Math.random()*args[0]);
-		}
+    static random(...args) {
+      if (args[1]) return Math.round(args[0] + Math.random() * (args[1] - args[0]));
+      else  return Math.round(Math.random()*args[0]);
+    }
 
-		static generateColor(...args) {
-			return 'rgba(' +random(...args)+ ',' +random(...args)+ ',' +random(...args)+ ')';
-		}
+    static generateColor(...args) {
+      return 'rgba(' +random(...args)+ ',' +random(...args)+ ',' +random(...args)+ ')';
+    }
 
-		static generatePrettyColor() {
-			let colors = {
-				'red': random(255),
-				'green': random(255),
-				'blue': random(255)
-			}
-			let dominantColor = Object.keys(colors)[Math.round(Math.random() * 2)];
-			colors[dominantColor] = 255;
-			return 'rgba(' +colors["red"]+ ',' +colors["green"]+ ',' +colors["blue"]+ ')';
-		}
-	}
+    static generatePrettyColor() {
+      let colors = {
+        'red': random(255),
+        'green': random(255),
+        'blue': random(255)
+      }
+      let dominantColor = Object.keys(colors)[Math.round(Math.random() * 2)];
+      colors[dominantColor] = 255;
+      return 'rgba(' +colors["red"]+ ',' +colors["green"]+ ',' +colors["blue"]+ ')';
+    }
+  }
 
-	class drawingBoard extends WebSocket{
-		constructor(id, address) {
-			super(address);
-			this.binaryType = 'arraybuffer';
-			this.addEventListener('open', this.open);
-			this.addEventListener('close', this.close);
-			this.addEventListener('message', this.message);
-			this.ERASER = document.getElementById('eraser');
-			this.CANVAS = document.getElementById(id);
-			this.CONTEXT = this.CANVAS.getContext('2d');
-			this.CONTEXT.canvas.width = this.CANVAS.offsetWidth;
-			this.CONTEXT.canvas.height = this.CANVAS.offsetHeight;
-			this.CONTEXT.lineWidth = 5;
-			this.CONTEXT.lineCap = 'round';
-			this.CONTEXT.strokeStyle = '#444444';
-			this.CONTEXT.rect(0, 0, this.CANVAS.offsetWidth, this.CANVAS.offsetHeight);
-			this.CONTEXT.fillStyle = "#ffffff";
-			this.CONTEXT.fill();
-			this.draw = this.draw.bind(this);
-			this.touchstart =  this.touchstart.bind(this);
-			this.mousedown = this.mousedown.bind(this);
-			this.mouseup = this.mouseup.bind(this);
-			this.changeEraserState = this.changeEraserState.bind(this);
-			this.CANVAS.addEventListener('touchstart', this.touchstart);
-			this.CANVAS.addEventListener('touchmove', this.draw);
-			this.CANVAS.addEventListener('mousedown', this.mousedown);
-			this.CANVAS.addEventListener('mouseup', this.mouseup);
-			this.ERASER.addEventListener('click', this.changeEraserState);
-			this.users = {}
-			this.username;
-			this.userid;
-			this.color = '#000000';
-			this.width = 5;
-			this.coord = {'x': 0, 'y': 0}
-			this.eraserState = 0;
-		}
+  class drawingBoard extends WebSocket{
+    constructor(id, address) {
+      super(address);
+      this.binaryType = 'arraybuffer';
+      this.addEventListener('open', this.open);
+      this.addEventListener('close', this.close);
+      this.addEventListener('message', this.message);
+      this.ERASER = document.getElementById('eraser');
+      this.CANVAS = document.getElementById(id);
+      this.CONTEXT = this.CANVAS.getContext('2d');
+      this.CONTEXT.canvas.width = this.CANVAS.offsetWidth;
+      this.CONTEXT.canvas.height = this.CANVAS.offsetHeight;
+      this.CONTEXT.lineWidth = 5;
+      this.CONTEXT.lineCap = 'round';
+      this.CONTEXT.strokeStyle = '#444444';
+      this.CONTEXT.rect(0, 0, this.CANVAS.offsetWidth, this.CANVAS.offsetHeight);
+      this.CONTEXT.fillStyle = "#ffffff";
+      this.CONTEXT.fill();
+      this.draw = this.draw.bind(this);
+      this.touchstart =  this.touchstart.bind(this);
+      this.mousedown = this.mousedown.bind(this);
+      this.mouseup = this.mouseup.bind(this);
+      this.changeEraserState = this.changeEraserState.bind(this);
+      this.CANVAS.addEventListener('touchstart', this.touchstart);
+      this.CANVAS.addEventListener('touchmove', this.draw);
+      this.CANVAS.addEventListener('mousedown', this.mousedown);
+      this.CANVAS.addEventListener('mouseup', this.mouseup);
+      this.ERASER.addEventListener('click', this.changeEraserState);
+      this.users = {}
+      this.username;
+      this.userid;
+      this.color = '#000000';
+      this.width = 5;
+      this.coord = {'x': 0, 'y': 0}
+      this.eraserState = 0;
+    }
 
-		open() {
-			console.log('Opened: ' + this.url);
-			this.createUser();
-		}
+    open() {
+      console.log('Opened: ' + this.url);
+      this.createUser();
+    }
 
-		close() {
-			console.log('Connection is closed');
-		}
+    close() {
+      console.log('Connection is closed');
+    }
 
-		createUser() {
-			// 1. Generate userid
-			this.userid = parseInt(String(Date.now()).substr(9));
-			// 2. Generate username or get it from Cookies
-			const usernames = ['James','Mary','John','Patricia','Robert','Jennifer','Michael','Linda','William','Elizabeth','David','Barbara','Richard','Susan','Joseph','Jessica','Thomas','Sarah','Charles','Karen','Daniel','Lisa','Mark','Emily','Andrew','Donna','Kevin','Carol','Joshua','Melissa','Timothy','Amy','Gary','Angela','Larry','Nicole','Frank','Ruth'];
+    createUser() {
+      // 1. Generate userid
+      this.userid = parseInt(String(Date.now()).substr(9));
+      // 2. Generate username or get it from Cookies
+      const usernames = ['James','Mary','John','Patricia','Robert','Jennifer','Michael','Linda','William','Elizabeth','David','Barbara','Richard','Susan','Joseph','Jessica','Thomas','Sarah','Charles','Karen','Daniel','Lisa','Mark','Emily','Andrew','Donna','Kevin','Carol','Joshua','Melissa','Timothy','Amy','Gary','Angela','Larry','Nicole','Frank','Ruth'];
 
-			if (this.getCookie()['drawing'] != undefined) {
-				this.username = decodeURIComponent(this.getCookie()['drawing']);
-			} else {
-				this.username = usernames[Helper.random(usernames.length-1)];
-			}
+      if (this.getCookie()['drawing'] != undefined) {
+        this.username = decodeURIComponent(this.getCookie()['drawing']);
+      } else {
+        this.username = usernames[Helper.random(usernames.length-1)];
+      }
 
-			document.title = this.username;
+      document.title = this.username;
 
-			this.send(JSON.stringify({
-				'action': 'init',
-				'userid': this.userid,
-				'username': this.username,
-				'color': this.color,
-				'width': this.width
-			}));
+      this.send(JSON.stringify({
+        'action': 'init',
+        'userid': this.userid,
+        'username': this.username,
+        'color': this.color,
+        'width': this.width
+      }));
 
-		}
+    }
 
-		message(message) {
-			if (message.data instanceof ArrayBuffer) {
-				// This happends only when we send mouse coordinates along with userid
-				let array = new Uint16Array(message.data);
-				this.drawUsers(array);
-			} else {
-				let data = JSON.parse(message.data);
-				switch (data['action']) {
-					case 'changeUsername':
-						console.log('Changing username');
-						break;
-					case 'changeColor':
-						this.users[data['userid']]['color'] = data['color'];
-						this.users[data['userid']]['width'] = data['width'];
-						break;
-					case 'deleteUser':
-						delete this.users[data['userid']];
-						break;
-					case 'loadUsers':
-						this.users = data['users'];
-						break;
-				}
-			}
-		}
+    message(message) {
+      if (message.data instanceof ArrayBuffer) {
+        // This happends only when we send mouse coordinates along with userid
+        let array = new Uint16Array(message.data);
+        this.drawUsers(array);
+      } else {
+        let data = JSON.parse(message.data);
+        switch (data['action']) {
+          case 'changeUsername':
+            console.log('Changing username');
+            break;
+          case 'changeColor':
+            this.users[data['userid']]['color'] = data['color'];
+            this.users[data['userid']]['width'] = data['width'];
+            break;
+          case 'deleteUser':
+            delete this.users[data['userid']];
+            break;
+          case 'loadUsers':
+            this.users = data['users'];
+            break;
+        }
+      }
+    }
 
-		keepAlive(interval=3000) {
-			setInterval(() => {this.send(JSON.stringify({'ka':1}))}, interval);
-		}
+    keepAlive(interval=3000) {
+      setInterval(() => {this.send(JSON.stringify({'ka':1}))}, interval);
+    }
 
-		send(data) {
-			return super.send(data);
-		}
+    send(data) {
+      return super.send(data);
+    }
 
-		draw() {
-			let array = new Uint16Array(5);
-			this.CONTEXT.strokeStyle = this.users[this.userid]['color'];
-			this.CONTEXT.lineWidth = this.users[this.userid]['width'];
-			this.CONTEXT.beginPath();
-			this.CONTEXT.moveTo(this.coord.x, this.coord.y);
-			array[0] = this.coord.x;
-			array[1] = this.coord.y;
-			this.getPosition(event);
-			this.CONTEXT.lineTo(this.coord.x, this.coord.y);
-			array[2] = this.coord.x;
-			array[3] = this.coord.y;
-			array[4] = this.userid;
-			this.CONTEXT.stroke();
-			this.CONTEXT.closePath();
-			if (this.readyState == 1) { this.send(array) }
-		}
+    draw() {
+      let array = new Uint16Array(5);
+      this.CONTEXT.strokeStyle = this.users[this.userid]['color'];
+      this.CONTEXT.lineWidth = this.users[this.userid]['width'];
+      this.CONTEXT.beginPath();
+      this.CONTEXT.moveTo(this.coord.x, this.coord.y);
+      array[0] = this.coord.x;
+      array[1] = this.coord.y;
+      this.getPosition(event);
+      this.CONTEXT.lineTo(this.coord.x, this.coord.y);
+      array[2] = this.coord.x;
+      array[3] = this.coord.y;
+      array[4] = this.userid;
+      this.CONTEXT.stroke();
+      this.CONTEXT.closePath();
+      if (this.readyState == 1) { this.send(array) }
+    }
 
-		drawUsers(array) {
-			if (this.userid != array[4]) {
-				this.CONTEXT.beginPath();
-				this.CONTEXT.strokeStyle = this.users[array[4]]['color'];
-				this.CONTEXT.lineWidth = this.users[array[4]]['width'];
-				this.CONTEXT.moveTo(array[0], array[1]);
-				this.CONTEXT.lineTo(array[2], array[3]);
-				this.CONTEXT.stroke();
-			}
-		}
-		mousedown(event) {
-			this.getPosition(event);
-			this.CANVAS.addEventListener('mousemove', this.draw);
-		}
+    drawUsers(array) {
+      if (this.userid != array[4]) {
+        this.CONTEXT.beginPath();
+        this.CONTEXT.strokeStyle = this.users[array[4]]['color'];
+        this.CONTEXT.lineWidth = this.users[array[4]]['width'];
+        this.CONTEXT.moveTo(array[0], array[1]);
+        this.CONTEXT.lineTo(array[2], array[3]);
+        this.CONTEXT.stroke();
+      }
+    }
+    mousedown(event) {
+      this.getPosition(event);
+      this.CANVAS.addEventListener('mousemove', this.draw);
+    }
 
-		mouseup(event) {
-			this.CANVAS.removeEventListener('mousemove',  this.draw);
-		}
+    mouseup(event) {
+      this.CANVAS.removeEventListener('mousemove',  this.draw);
+    }
 
-		touchstart(event) {
-			event.preventDefault();
-			this.getPosition(event);
-		}
+    touchstart(event) {
+      event.preventDefault();
+      this.getPosition(event);
+    }
 
-		changeColor(color) {
-			this.CONTEXT.strokeStyle = color;
-			this.color = color;
-			if (this.eraserState == 1) this.changeEraserState();
-			this.send(JSON.stringify({
-				'action': 'changeColor',
-				'userid': this.userid,
-				'color': this.color,
-				'width': 5
-			}));
-		}
+    changeColor(color) {
+      this.CONTEXT.strokeStyle = color;
+      this.color = color;
+      if (this.eraserState == 1) this.changeEraserState();
+      this.send(JSON.stringify({
+        'action': 'changeColor',
+        'userid': this.userid,
+        'color': this.color,
+        'width': 5
+      }));
+    }
 
-		changeEraserState() {
-			if (this.eraserState == 0) {
-				this.ERASER.classList.add('eraser_active');
-				this.CONTEXT.strokeStyle = '#ffffff';
-				this.CONTEXT.lineWidth = 25;
-				this.send(JSON.stringify({
-					'action': 'changeColor',
-					'userid': this.userid,
-					'color': '#ffffff',
-					'width': 25
-				}));
-			this.eraserState = 1;
+    changeEraserState() {
+      if (this.eraserState == 0) {
+        this.ERASER.classList.add('eraser_active');
+        this.CONTEXT.strokeStyle = '#ffffff';
+        this.CONTEXT.lineWidth = 25;
+        this.send(JSON.stringify({
+          'action': 'changeColor',
+          'userid': this.userid,
+          'color': '#ffffff',
+          'width': 25
+        }));
+      this.eraserState = 1;
 
-			} else {
-				this.ERASER.classList.remove('eraser_active');
-				this.send(JSON.stringify({
-					'action': 'changeColor',
-					'userid': this.userid,
-					'color': this.color,
-					'width': 5
-				}));
-				this.eraserState = 0;
-			}
-		}
+      } else {
+        this.ERASER.classList.remove('eraser_active');
+        this.send(JSON.stringify({
+          'action': 'changeColor',
+          'userid': this.userid,
+          'color': this.color,
+          'width': 5
+        }));
+        this.eraserState = 0;
+      }
+    }
 
-		saveImage() {
-			const image64 = this.CANVAS.toDataURL('image/png', 1.0);
-			const a = document.createElement('a');
-			a.download = 'drawing.png';
-			a.href = image64;
-			a.click();
-			//window.location.href = image64.replace("image/png", "image/octet-stream");
-		}
+    saveImage() {
+      const image64 = this.CANVAS.toDataURL('image/png', 1.0);
+      const a = document.createElement('a');
+      a.download = 'drawing.png';
+      a.href = image64;
+      a.click();
+      //window.location.href = image64.replace("image/png", "image/octet-stream");
+    }
 
-		getPosition(event) {
-			this.coord.x = event.clientX || event.touches[0].clientX;
-			this.coord.y = event.clientY || event.touches[0].clientY;
-		}
+    getPosition(event) {
+      this.coord.x = event.clientX || event.touches[0].clientX;
+      this.coord.y = event.clientY || event.touches[0].clientY;
+    }
 
-		setCookie(username) {
-			let later = new Date().getTime() * 2;
-			document.cookie = 'drawing=' + encodeURIComponent(username) + ';expires=' + (new Date(later)).toUTCString();
-			console.log('Set Cookie for ' + username);
-		}
+    setCookie(username) {
+      let later = new Date().getTime() * 2;
+      document.cookie = 'drawing=' + encodeURIComponent(username) + ';expires=' + (new Date(later)).toUTCString();
+      console.log('Set Cookie for ' + username);
+    }
 
-		getCookie() {
-			return Object.fromEntries(document.cookie.split(';').map((e)=>e.trim().split('=')));
-		}
+    getCookie() {
+      return Object.fromEntries(document.cookie.split(';').map((e)=>e.trim().split('=')));
+    }
 
-	}
+  }
 
-	const ADDRESS = location.origin.replace(/^http/, 'ws');
-	const APP = new drawingBoard('canvas', ADDRESS);
+  const ADDRESS = location.origin.replace(/^http/, 'ws');
+  const APP = new drawingBoard('canvas', ADDRESS);
 
 </script>
 </html>
