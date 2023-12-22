@@ -1,6 +1,0 @@
-{
-  "name": "Drawing Board",
-  "description": "Collaborative drawing",
-  "repository": "https://github.com/arseniyturin/Drawing-Board",
-  "keywords": ["node", "express", "websocket"]
-}
